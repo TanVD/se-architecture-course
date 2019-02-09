@@ -3,7 +3,7 @@ package tanvd.gel
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ContextTests : TestBase() {
+class ContextTest : TestBase() {
     @Test
     fun expand_constructFullyOperation_rendered() {
         GlobalContext["a"] = "123"
@@ -28,5 +28,11 @@ class ContextTests : TestBase() {
         Assertions.assertEquals("plan \"123\" \"456\" \"789\"", GlobalContext.expand("plan \"\$a\" \"\${b}\" \"\$c\""))
     }
 
-    //TODO-tanvd one quote?
+    @Test
+    fun expand_unaryQuotes_rendered() {
+        GlobalContext["a"] = "123"
+        GlobalContext["b"] = "456"
+        GlobalContext["c"] = "789"
+        Assertions.assertEquals("plan123 \'\$a\' \'\${b}\' \"789\"", GlobalContext.expand("plan\$a \'\$a\' \'\${b}\' \"\$c\""))
+    }
 }

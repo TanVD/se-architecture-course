@@ -21,13 +21,11 @@ object Parser {
     }
 
     private fun splitByPipes(line: String, quotes: List<Char>): List<String> {
-        var input = line
         val commands = ArrayList<String>()
 
         var quote: Char? = null
         var curLine = ""
-        while (input.isNotEmpty()) {
-            val curChar = input.first()
+        for (curChar in line) {
             when {
                 quote != null -> {
                     curLine += curChar
@@ -47,7 +45,6 @@ object Parser {
                     curLine += curChar
                 }
             }
-            input = input.drop(1)
         }
         commands.add(curLine.trim())
 

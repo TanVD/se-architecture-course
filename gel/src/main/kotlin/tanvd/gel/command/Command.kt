@@ -4,9 +4,10 @@ import java.io.InputStream
 
 /**
  * Command of Gel interpreter
- * @param params -- params that command use
+ * @param inParams -- params that command use
  */
-abstract class Command(val params: List<String>) {
+abstract class Command(inParams: List<String>) {
+    protected val params = inParams.map { it.trim().trim('"', '\'') }
     /**
      * Execute command with it's params
      * @param inputStream -- stdin of command, may be ignored by command
@@ -29,4 +30,18 @@ abstract class Command(val params: List<String>) {
             return commands[name.toLowerCase()]?.invoke(params) ?: ExternalCommand(name, params)
         }
     }
+
+    //equals and hashcode
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Command
+
+        if (params != other.params) return false
+
+        return true
+    }
+
+    override fun hashCode() = params.hashCode()
 }
