@@ -5,4 +5,4 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gel/gradlew build
+  - ./gel/gradlew build --console=plain
