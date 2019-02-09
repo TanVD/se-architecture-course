@@ -48,5 +48,4 @@ tasks.withType<Test> {
 
 (tasks.findByName("wrapper") as Wrapper?)?.apply {
     gradleVersion = "5.1.1"
-    distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
