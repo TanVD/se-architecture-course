@@ -3,6 +3,7 @@ version = "1.0-SNAPSHOT"
 
 plugins {
     idea
+    application
     kotlin("jvm") version "1.3.21" apply true
 }
 
@@ -27,6 +28,14 @@ dependencies {
     compile(kotlin("stdlib"))
     testCompile("org.junit.jupiter", "junit-jupiter-api", "5.2.0")
     testRuntime("org.junit.jupiter", "junit-jupiter-engine", "5.2.0")
+}
+
+application {
+    mainClassName = "tanvd.gel.MainKt"
+}
+tasks.withType<JavaExec> {
+    standardInput = System.`in`
+    standardOutput = System.out
 }
 
 tasks.withType<Test> {

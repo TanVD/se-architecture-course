@@ -8,7 +8,7 @@ import tanvd.gel.emptyStream
 import java.io.File
 import java.nio.file.Paths
 
-class CommandsTest: TestBase() {
+class CommandsTest : TestBase() {
     @Test
     fun assignCommand_notExistsVariable_variableAdded() {
         val command = AssignCommand(listOf("a", "b"))
