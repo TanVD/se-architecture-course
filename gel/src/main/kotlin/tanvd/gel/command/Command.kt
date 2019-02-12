@@ -1,12 +1,15 @@
 package tanvd.gel.command
 
+import com.xenomachina.argparser.ArgParser
 import java.io.InputStream
 
 /**
  * Command of Gel interpreter
  * @param params -- params that command use
  */
-abstract class Command(val params: List<String>) {
+abstract class Command(protected val params: List<String>) {
+    protected val argParser = ArgParser(params.toTypedArray())
+
     /**
      * Execute command with it's params
      * @param inputStream -- stdin of command, may be ignored by command
@@ -21,13 +24,13 @@ abstract class Command(val params: List<String>) {
                 "cat" to { params -> CatCommand(params) },
                 "wc" to { params -> WcCommand(params) },
                 "pwd" to { _ -> PwdCommand() },
+                "grep" to { params -> GrepCommand(params) },
                 "=" to { params -> AssignCommand(params) }
         )
 
         /** Create command if such exists, otherwise create ExternalCommand */
         fun create(name: String, params: List<String>) = commands[name.toLowerCase()]?.invoke(params) ?: ExternalCommand(name, params)
     }
-
 
     //equals and hashcode
     //used it tests

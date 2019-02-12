@@ -10,7 +10,7 @@ import java.io.File
 import java.lang.IllegalArgumentException
 import java.nio.file.Paths
 
-class CommandsTest : TestBase() {
+class SimpleCommandsTest : TestBase() {
     @Test
     fun assignCommand_notExistsVariable_variableAdded() {
         val command = AssignCommand(listOf("a", "b"))

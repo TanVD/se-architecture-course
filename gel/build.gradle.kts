@@ -26,6 +26,7 @@ repositories {
 
 dependencies {
     compile(kotlin("stdlib"))
+    compile("com.xenomachina", "kotlin-argparser", "2.0.7")
     testCompile("org.junit.jupiter", "junit-jupiter-api", "5.2.0")
     testRuntime("org.junit.jupiter", "junit-jupiter-engine", "5.2.0")
 }

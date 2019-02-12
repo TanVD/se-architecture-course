@@ -9,7 +9,9 @@ import java.nio.charset.Charset
  * @param params -- params to print to stdout
  */
 class EchoCommand(params: List<String>) : Command(params) {
+    private val inputParams by argParser.positionalList("PARAMS", "params to output")
+
     override fun execute(inputStream: InputStream): ByteArray {
-        return params.joinToString(separator = " ").toByteArray(Charset.defaultCharset())
+        return inputParams.joinToString(separator = " ").toByteArray(Charset.defaultCharset())
     }
 }
