@@ -1,11 +1,16 @@
 package tanvd.gel
 
 import tanvd.gel.command.ExitException
+import tanvd.gel.utils.Splitter
 
 fun main() {
     print("~> ")
     var line = readLine()
     while (line != null) {
+        while (!Splitter.lastQuoteClosed(line)) {
+            line += '\n'
+            line += readLine()
+        }
         val chain = Parser.parse(line)
         val result = try {
             chain.execute(System.`in`)
