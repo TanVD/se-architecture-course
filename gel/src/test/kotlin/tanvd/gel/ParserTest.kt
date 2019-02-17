@@ -30,6 +30,12 @@ class ParserTest {
     }
 
     @Test
+    fun parse_assignCommandWithQuotesAndSpaces_gotCommand() {
+        val chain = Parser.parse("abcd='    123   '  ")
+        Assertions.assertEquals(CommandChain(listOf(AssignCommand(listOf("abcd", "    123   ")))), chain)
+    }
+
+    @Test
     fun parse_simpleEchoEchoPipe_gotCommands() {
         val chain = Parser.parse("echo 1 2 3 | echo 4 5 6")
         Assertions.assertEquals(CommandChain(listOf(EchoCommand(listOf("1", "2", "3")), EchoCommand(listOf("4", "5", "6")))), chain)
@@ -52,5 +58,11 @@ class ParserTest {
     fun parse_withQuotedPipePipe_gotCommands() {
         val chain = Parser.parse("echo \"1\" \"2|3\" \'4|5\' | echo 789 \"15|17\" 21")
         Assertions.assertEquals(CommandChain(listOf(EchoCommand(listOf("1", "2|3", "4|5")), EchoCommand(listOf("789", "15|17", "21")))), chain)
+    }
+
+    @Test
+    fun parse_withQuotedPipePipePipe_gotCommands() {
+        val chain = Parser.parse("echo \"1\"  | echo 789 | echo 456")
+        Assertions.assertEquals(CommandChain(listOf(EchoCommand(listOf("1")), EchoCommand(listOf("789")), EchoCommand(listOf("456")))), chain)
     }
 }

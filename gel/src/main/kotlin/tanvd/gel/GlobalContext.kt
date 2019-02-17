@@ -1,7 +1,7 @@
 package tanvd.gel
 
 import org.jetbrains.annotations.TestOnly
-import java.lang.StringBuilder
+import tanvd.gel.utils.Splitter
 
 /** Static storage of declared variables in this interpreter session */
 object GlobalContext {
@@ -22,36 +22,11 @@ object GlobalContext {
      * @param line -- string to expand
      * @return string with all variables existing in context expanded, except those in unary quotes
      */
-    fun expand(line: String): String {
-        return buildString {
-            var quote: Char? = null
-            var curLine = StringBuilder()
-            for (curChar in line) {
-                when {
-                    quote != null -> {
-                        curLine.append(curChar)
-                        if (quote == curChar) {
-                            when (quote) {
-                                '"' -> append(expandAll(curLine.toString()))
-                                '\'' -> append(curLine)
-                            }
-                            quote = null
-                            curLine = StringBuilder()
-                        }
-                    }
-                    curChar in listOf('"', '\'') -> {
-                        append(expandAll(curLine.toString()))
-                        curLine = StringBuilder()
-
-                        quote = curChar
-                        curLine.append(quote)
-                    }
-                    else -> {
-                        curLine.append(curChar)
-                    }
-                }
-            }
-            append(expandAll(curLine.toString()))
+    fun expand(line: String) = Splitter.splitIntoParts(line).joinToString(separator = "") {
+        if (it.quote != '\'') {
+            expandAll(it.part)
+        } else {
+            it.part
         }
     }
 
