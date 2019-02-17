@@ -1,6 +1,7 @@
 package tanvd.gel
 
 import org.jetbrains.annotations.TestOnly
+import java.lang.StringBuilder
 
 /** Static storage of declared variables in this interpreter session */
 object GlobalContext {
@@ -22,36 +23,36 @@ object GlobalContext {
      * @return string with all variables existing in context expanded, except those in unary quotes
      */
     fun expand(line: String): String {
-        var result = ""
-        var quote: Char? = null
-        var curLine = ""
-        for (curChar in line) {
-            when {
-                quote != null -> {
-                    curLine += curChar
-                    if (quote == curChar) {
-                        when (quote) {
-                            '"' -> result += expandAll(curLine)
-                            '\'' -> result += curLine
+        return buildString {
+            var quote: Char? = null
+            var curLine = StringBuilder()
+            for (curChar in line) {
+                when {
+                    quote != null -> {
+                        curLine.append(curChar)
+                        if (quote == curChar) {
+                            when (quote) {
+                                '"' -> append(expandAll(curLine.toString()))
+                                '\'' -> append(curLine)
+                            }
+                            quote = null
+                            curLine = StringBuilder()
                         }
-                        quote = null
-                        curLine = ""
+                    }
+                    curChar in listOf('"', '\'') -> {
+                        append(expandAll(curLine.toString()))
+                        curLine = StringBuilder()
+
+                        quote = curChar
+                        curLine.append(quote)
+                    }
+                    else -> {
+                        curLine.append(curChar)
                     }
                 }
-                curChar in listOf('"', '\'') -> {
-                    result += expandAll(curLine)
-                    curLine = ""
-
-                    quote = curChar
-                    curLine += quote
-                }
-                else -> {
-                    curLine += curChar
-                }
             }
+            append(expandAll(curLine.toString()))
         }
-        result += expandAll(curLine)
-        return result
     }
 
     /** Expand all variables, do not check if it is in unary quotes */

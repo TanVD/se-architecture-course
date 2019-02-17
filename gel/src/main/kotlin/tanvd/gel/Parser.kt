@@ -2,6 +2,7 @@ package tanvd.gel
 
 import tanvd.gel.command.Command
 import tanvd.gel.command.CommandChain
+import java.lang.StringBuilder
 
 /** Parser object -- it parses line into Commands and pipe them */
 object Parser {
@@ -15,12 +16,13 @@ object Parser {
 
     /** Parse command into name and params */
     private fun prepareCommand(command: String): Pair<String, List<String>> {
-        val values = command.split(Regex("\\s+")).map { it.trim('"', '\'') }
+        val values = command.split(Regex("\\s+")).map { it.trim().trim('"', '\'') }.filter { it.isNotBlank() }
         val name = values.first()
         val params = values.drop(1)
         return if (!name.contains("=")) {
             name to params
         } else {
+            require(params.isEmpty()) { "Assign command should not contain any additional params" }
             "=" to name.split("=")
         }
     }
@@ -30,29 +32,29 @@ object Parser {
         val commands = ArrayList<String>()
 
         var quote: Char? = null
-        var curLine = ""
+        var curLine = StringBuilder()
         for (curChar in line) {
             when {
                 quote != null -> {
-                    curLine += curChar
+                    curLine.append(curChar)
                     if (quote == curChar) {
                         quote = null
                     }
                 }
                 curChar in quotes -> {
                     quote = curChar
-                    curLine += quote
+                    curLine.append(quote)
                 }
                 curChar == '|' -> {
-                    commands.add(curLine.trim())
-                    curLine = ""
+                    commands.add(curLine.trim().toString())
+                    curLine = StringBuilder()
                 }
                 else -> {
-                    curLine += curChar
+                    curLine.append(curChar)
                 }
             }
         }
-        commands.add(curLine.trim())
+        commands.add(curLine.trim().toString())
 
         return commands
     }

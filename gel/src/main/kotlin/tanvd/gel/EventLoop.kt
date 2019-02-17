@@ -11,8 +11,12 @@ fun main() {
             chain.execute(System.`in`)
         } catch (e: ExitException) {
             return
+        } catch (e: IllegalArgumentException) {
+            (e.message ?: "Illegal argument").toByteArray()
         }
-        println(String(result))
+        if (result.isNotEmpty()) {
+            println(String(result))
+        }
 
         print("~> ")
         line = readLine()

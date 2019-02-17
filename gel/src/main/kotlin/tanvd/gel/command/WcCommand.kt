@@ -10,7 +10,13 @@ import java.io.InputStream
  */
 class WcCommand(params: List<String>) : Command(params) {
     override fun execute(inputStream: InputStream): ByteArray {
-        val input = if (params.none { it.isNotBlank() }) inputStream else File(params.first()).inputStream()
+        require(params.size <= 1) { "wc command takes not more than one param"}
+
+        val input = if (params.isEmpty()) inputStream else {
+            val file = File(params.first())
+            require(file.exists()) { "file passed to wc command does not exist" }
+            file.inputStream()
+        }
         var lines = 0
         var words = 0
         var bytes = 0

@@ -11,6 +11,8 @@ import java.io.InputStream
  */
 class AssignCommand(params: List<String>) : Command(params) {
     override fun execute(inputStream: InputStream): ByteArray {
+        require(params.size == 2) { "Malformed assignment operator"}
+
         val (name, value) = params
         GlobalContext[name] = value
         return ByteArray(0)

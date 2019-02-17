@@ -6,8 +6,7 @@ import java.io.InputStream
  * Command of Gel interpreter
  * @param inParams -- params that command use
  */
-abstract class Command(inParams: List<String>) {
-    protected val params = inParams.map { it.trim().trim('"', '\'') }
+abstract class Command(val params: List<String>) {
     /**
      * Execute command with it's params
      * @param inputStream -- stdin of command, may be ignored by command
@@ -26,9 +25,7 @@ abstract class Command(inParams: List<String>) {
         )
 
         /** Create command if such exists, otherwise create ExternalCommand */
-        fun create(name: String, params: List<String>): Command {
-            return commands[name.toLowerCase()]?.invoke(params) ?: ExternalCommand(name, params)
-        }
+        fun create(name: String, params: List<String>) = commands[name.toLowerCase()]?.invoke(params) ?: ExternalCommand(name, params)
     }
 
     //equals and hashcode
