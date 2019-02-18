@@ -16,8 +16,7 @@ object Parser {
 
     /** Parse command into name and params */
     private fun prepareCommand(command: String): Pair<String, List<String>> {
-        val values = Splitter.splitIntoParts(command, Regex("\\s")).map { it.part.trim().trim { char -> char == it.quote } }
-                .filter { it.isNotBlank() }
+        val values = Splitter.splitIntoParts(command, Regex("\\s")).map { it.trimmed }.filter { it.isNotBlank() }
         val name = values.first()
         val params = values.drop(1)
         return if (!name.contains("=")) {

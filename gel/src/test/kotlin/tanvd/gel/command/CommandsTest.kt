@@ -3,9 +3,11 @@ package tanvd.gel.command
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import tanvd.gel.GlobalContext
+import tanvd.gel.Shell
 import tanvd.gel.TestBase
 import tanvd.gel.emptyStream
 import java.io.File
+import java.lang.IllegalArgumentException
 import java.nio.file.Paths
 
 class CommandsTest : TestBase() {
@@ -26,9 +28,27 @@ class CommandsTest : TestBase() {
     }
 
     @Test
+    fun assignCommand_malformedCommand_throwsIllegalArgument() {
+        val command = AssignCommand(listOf("a", "b", "c"))
+        Assertions.assertThrows(IllegalArgumentException::class.java) { command.execute(emptyStream())}
+    }
+
+    @Test
     fun catCommand_fromFile_gotRightResult() {
         val command = CatCommand(listOf("src/test/resources/test.txt"))
         Assertions.assertEquals(File("src/test/resources/test.txt").readText(), String(command.execute(emptyStream())))
+    }
+
+    @Test
+    fun catCommand_malformedCommand_throwsIllegalArgument() {
+        val command = CatCommand(listOf("a", "b", "c"))
+        Assertions.assertThrows(IllegalArgumentException::class.java) { command.execute(emptyStream())}
+    }
+
+    @Test
+    fun catCommand_fileDoesNotExist_throwsIllegalArgument() {
+        val command = CatCommand(listOf("a"))
+        Assertions.assertThrows(IllegalArgumentException::class.java) { command.execute(emptyStream())}
     }
 
     @Test
@@ -40,12 +60,8 @@ class CommandsTest : TestBase() {
     @Test
     fun exitCommand_echoConsole_exceptionThrown() {
         val command = ExitCommand()
-        try {
-            command.execute(emptyStream())
-        } catch (e: ExitException) {
-            return
-        }
-        Assertions.fail<ExitException>("Exit exception not thrown")
+        command.execute(emptyStream())
+        Assertions.assertTrue(Shell.State.shouldExit)
     }
 
     @Test
@@ -54,12 +70,24 @@ class CommandsTest : TestBase() {
         Assertions.assertEquals(Paths.get(".").toAbsolutePath().normalize().toString(), String(command.execute(emptyStream())))
     }
 
+    @Test
+    fun wcCommand_malformedCommand_throwsIllegalArgument() {
+        val command = WcCommand(listOf("a", "b", "c"))
+        Assertions.assertThrows(IllegalArgumentException::class.java) { command.execute(emptyStream())}
+    }
 
     @Test
     fun wcCommand_fromFile_gotRightResult() {
         val command = WcCommand(listOf("src/test/resources/test.txt"))
         Assertions.assertEquals("3 4 14", String(command.execute(emptyStream())))
     }
+
+    @Test
+    fun wcCommand_fileDoesNotExist_throwsIllegalArgument() {
+        val command = WcCommand(listOf("a"))
+        Assertions.assertThrows(IllegalArgumentException::class.java) { command.execute(emptyStream())}
+    }
+
 
     @Test
     fun wcCommand_fromStream_gotRightResult() {
@@ -72,7 +100,7 @@ class CommandsTest : TestBase() {
         val echoCommand = EchoCommand(listOf("1 2 3"))
         val wcCommand = WcCommand(emptyList())
         val chain = CommandChain(listOf(echoCommand, wcCommand))
-        Assertions.assertEquals("1 3 5", String(chain.execute(emptyStream())))
+        Assertions.assertEquals("1 3 5", String(chain.run()))
     }
 
 }

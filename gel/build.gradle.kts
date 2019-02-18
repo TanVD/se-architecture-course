@@ -31,7 +31,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "tanvd.gel.EventLoopKt"
+    mainClassName = "tanvd.gel.MainKt"
 }
 tasks.withType<JavaExec> {
     standardInput = System.`in`

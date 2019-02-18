@@ -13,8 +13,8 @@ class ParserTest {
 
     @Test
     fun parse_simpleNotExistingCommand_gotCommand() {
-        val chain = Parser.parse("grep 1 2 3")
-        Assertions.assertEquals(CommandChain(listOf(ExternalCommand("grep", listOf("1", "2", "3")))), chain)
+        val chain = Parser.parse("not_existing_command 1 2 3")
+        Assertions.assertEquals(CommandChain(listOf(ExternalCommand("not_existing_command", listOf("1", "2", "3")))), chain)
     }
 
     @Test

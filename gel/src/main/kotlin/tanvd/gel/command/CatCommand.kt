@@ -11,7 +11,7 @@ import java.io.InputStream
 class CatCommand(params: List<String>) : Command(params) {
     override fun execute(inputStream: InputStream): ByteArray {
         require(params.size == 1) { "cat command takes exactly one param" }
-        val file = File(params.first())
+        val file = File(params.single())
         require(file.exists()) { "file passed to cat command does not exist" }
 
         return file.readBytes()

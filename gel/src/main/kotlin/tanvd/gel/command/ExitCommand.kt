@@ -1,8 +1,7 @@
 package tanvd.gel.command
 
+import tanvd.gel.Shell
 import java.io.InputStream
-
-class ExitException : Exception()
 
 /**
  * Gel script command
@@ -10,6 +9,7 @@ class ExitException : Exception()
  */
 class ExitCommand : Command(emptyList()) {
     override fun execute(inputStream: InputStream): ByteArray {
-        throw ExitException()
+        Shell.State.shouldExit = true
+        return ByteArray(0)
     }
 }

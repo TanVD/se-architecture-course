@@ -10,7 +10,7 @@ import java.io.InputStream
  */
 class WcCommand(params: List<String>) : Command(params) {
     override fun execute(inputStream: InputStream): ByteArray {
-        require(params.size <= 1) { "wc command takes not more than one param"}
+        require(params.size <= 1) { "wc command takes not more than one param" }
 
         val input = if (params.isEmpty()) inputStream else {
             val file = File(params.first())

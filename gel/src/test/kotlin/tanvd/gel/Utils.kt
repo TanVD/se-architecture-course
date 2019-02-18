@@ -6,6 +6,7 @@ abstract class TestBase {
     @AfterEach
     fun cleanup() {
         GlobalContext.clear()
+        Shell.State.clear()
     }
 }
 

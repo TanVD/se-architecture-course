@@ -4,7 +4,7 @@ import java.io.InputStream
 
 /**
  * Command of Gel interpreter
- * @param inParams -- params that command use
+ * @param params -- params that command use
  */
 abstract class Command(val params: List<String>) {
     /**
@@ -28,7 +28,9 @@ abstract class Command(val params: List<String>) {
         fun create(name: String, params: List<String>) = commands[name.toLowerCase()]?.invoke(params) ?: ExternalCommand(name, params)
     }
 
+
     //equals and hashcode
+    //used it tests
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
