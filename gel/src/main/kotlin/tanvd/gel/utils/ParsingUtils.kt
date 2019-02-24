@@ -20,7 +20,7 @@ object Splitter {
     fun splitIntoParts(line: String, alsoSplit: Regex? = null, quotes: List<Char> = defaultQuotes): List<Part> {
         val parts = ArrayList<Part>()
         var quote: Char? = null
-        var curLine = StringBuilder()
+        val curLine = StringBuilder()
         for (curChar in line) {
             when {
                 quote != null -> {
@@ -28,19 +28,19 @@ object Splitter {
                     if (quote == curChar) {
                         parts += Part(curLine.toString(), quote)
                         quote = null
-                        curLine = StringBuilder()
+                        curLine.clear()
                     }
                 }
                 curChar in quotes -> {
                     parts += Part(curLine.toString(), null)
-                    curLine = StringBuilder()
+                    curLine.clear()
 
                     quote = curChar
                     curLine.append(quote)
                 }
                 alsoSplit?.matches(curChar.toString()) ?: false -> {
                     parts += Part(curLine.toString(), null)
-                    curLine = StringBuilder()
+                    curLine.clear()
                     curLine.append(curChar)
                 }
                 else -> {
@@ -55,9 +55,11 @@ object Splitter {
     }
 
     fun lastQuoteClosed(line: String, quotes: List<Char> = defaultQuotes): Boolean {
-        val lastPart = splitIntoParts(line, null, quotes).lastOrNull()
-        return lastPart == null || lastPart.part.firstOrNull() !in quotes || (lastPart.part.first() in quotes
-                && lastPart.part.length > 1 && lastPart.part.first() == lastPart.part.last())
+        val lastPart = splitIntoParts(line, null, quotes).lastOrNull() ?: return true
+        val lastNotStartsWithQuote = lastPart.part.firstOrNull() !in quotes
+        val lastPartQuotesClosed = lastPart.part.first() in quotes
+                && lastPart.part.length > 1 && lastPart.part.first() == lastPart.part.last()
+        return lastNotStartsWithQuote || lastPartQuotesClosed
     }
 }
 

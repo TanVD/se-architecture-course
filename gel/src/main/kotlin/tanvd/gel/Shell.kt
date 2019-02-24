@@ -32,6 +32,8 @@ object Shell {
                 chain.run()
             } catch (e: IllegalArgumentException) {
                 (e.message ?: "Illegal argument").toByteArray()
+            } catch (e: Exception) {
+                "Unknown error ocurred: ${e.message}".toByteArray()
             }
 
             if (State.shouldExit) {

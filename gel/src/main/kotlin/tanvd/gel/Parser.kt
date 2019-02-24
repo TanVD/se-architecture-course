@@ -31,11 +31,12 @@ object Parser {
         val parts = Splitter.splitIntoParts(line, Regex("\\|"))
         val commands = ArrayList<String>()
 
-        var curLine = StringBuilder()
+        val curLine = StringBuilder()
         for (part in parts) {
             if (part.part.startsWith("|")) {
                 commands += curLine.toString()
-                curLine = StringBuilder(part.part.drop(1))
+                curLine.clear()
+                curLine.append(part.part.drop(1))
             } else {
                 curLine.append(part.part)
             }
