@@ -2,10 +2,14 @@ package tanvd.gel
 
 import org.jetbrains.annotations.TestOnly
 import tanvd.gel.utils.Splitter
+import java.io.File
+import java.nio.file.Paths
 
 object Shell {
     object State {
         var shouldExit: Boolean = false
+
+        var currentWorkingDirectory: File = Paths.get(".").toAbsolutePath().normalize().toFile()
 
         @TestOnly
         fun clear() {
@@ -16,6 +20,15 @@ object Shell {
     object Configuration {
         const val prompt: String = "~> "
         const val supportMultiLine: Boolean = true
+    }
+
+    object FileGetter {
+        fun getFileByPath(path: String?) : File {
+            if (path == null) {
+                return State.currentWorkingDirectory
+            }
+            return State.currentWorkingDirectory.resolve(path)
+        }
     }
 
     fun run() {

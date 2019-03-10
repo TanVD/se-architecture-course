@@ -1,6 +1,7 @@
 package tanvd.gel.command
 
 import com.xenomachina.argparser.default
+import tanvd.gel.Shell
 import java.io.File
 import java.io.InputStream
 
@@ -36,7 +37,11 @@ class GrepCommand(params: List<String>) : Command(params) {
     }
 
     override fun execute(inputStream: InputStream): ByteArray {
-        val input = if (file != null) File(file).inputStream() else inputStream
+        val input = if (file == null) inputStream else {
+            val file = Shell.FileGetter.getFileByPath(file)
+            require(file.exists()) { "file passed to grep command does not exist" }
+            file.inputStream()
+        }
 
         var wasFirst = false
         return buildString {
