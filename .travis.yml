@@ -1,0 +1,10 @@
+language: java
+install: true
+
+jdk:
+  - oraclejdk8
+
+before_script: cd gel
+
+script:
+  - ./gradlew build --console=plain
