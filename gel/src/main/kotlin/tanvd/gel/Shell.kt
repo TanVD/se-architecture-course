@@ -1,5 +1,7 @@
 package tanvd.gel
 
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream
+import com.xenomachina.argparser.ShowHelpException
 import org.jetbrains.annotations.TestOnly
 import tanvd.gel.utils.Splitter
 
@@ -27,13 +29,18 @@ object Shell {
                 line += readLine()
             }
 
-            val chain = Parser.parse(line)
             val result = try {
-                chain.run()
+                Parser.parse(line).run()
             } catch (e: IllegalArgumentException) {
                 (e.message ?: "Illegal argument").toByteArray()
+            } catch (e: ShowHelpException) {
+                val array = ByteOutputStream()
+                array.writer().use {
+                    e.printUserMessage(it, null, 60)
+                }
+                array.bytes
             } catch (e: Exception) {
-                "Unknown error ocurred: ${e.message}".toByteArray()
+                "Unknown error occurred: ${e.message}".toByteArray()
             }
 
             if (State.shouldExit) {

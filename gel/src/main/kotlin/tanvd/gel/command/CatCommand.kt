@@ -1,5 +1,6 @@
 package tanvd.gel.command
 
+import com.xenomachina.argparser.default
 import java.io.File
 import java.io.InputStream
 
@@ -9,14 +10,19 @@ import java.io.InputStream
  * @param params -- one value, path to file
  */
 class CatCommand(params: List<String>) : Command(params) {
-    private val filename by argParser.positional("FILE", "path to filename to cat")
+    private val filename by argParser.positional("FILE", "path to filename to cat").default<String?>(null)
 
     override fun execute(inputStream: InputStream): ByteArray {
-        require(params.size == 1) { "cat command takes exactly one param" }
+        require(params.size <= 1) { "cat command takes one or zero params" }
 
-        val file = File(filename)
-        require(file.exists()) { "file passed to cat command does not exist" }
+        return if (filename != null) {
 
-        return file.readBytes()
+            val file = File(filename)
+            require(file.exists()) { "file passed to cat command does not exist" }
+
+            file.readBytes()
+        } else {
+            inputStream.readBytes()
+        }
     }
 }
