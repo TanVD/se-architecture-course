@@ -27,7 +27,7 @@ abstract class Command(protected val params: List<String>) {
                 "grep" to { params -> GrepCommand(params) },
                 "=" to { params -> AssignCommand(params) },
                 "cd" to { params -> CdCommand(params) },
-                "ls" to { _ -> LsCommand() }
+                "ls" to { params -> LsCommand(params) }
         )
 
         /** Create command if such exists, otherwise create ExternalCommand */
