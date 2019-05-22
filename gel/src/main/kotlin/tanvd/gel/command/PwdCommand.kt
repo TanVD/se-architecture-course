@@ -1,7 +1,7 @@
 package tanvd.gel.command
 
+import tanvd.gel.Shell
 import java.io.InputStream
-import java.nio.file.Paths
 
 /**
  * Gel script command
@@ -9,6 +9,6 @@ import java.nio.file.Paths
  */
 class PwdCommand : Command(emptyList()) {
     override fun execute(inputStream: InputStream): ByteArray {
-        return Paths.get(".").toAbsolutePath().normalize().toString().toByteArray()
+        return Shell.State.currentWorkingDirectory.toString().toByteArray()
     }
 }
